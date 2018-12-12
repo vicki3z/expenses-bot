@@ -14,7 +14,7 @@ bot.start((ctx) => ctx.reply('Hi! My name is TrackMeMoney'))
 bot.hears('hi', (ctx) => ctx.reply('Hey there!'))
 
 bot.command('listExpenses', (ctx) => {
-  console.log(ctx)
+  console.log(ctx.from)
   Expense.find(function (err, expenses) {
     if (err) {
       ctx.reply('I am having some difficulties with finding your expenses.');
@@ -28,6 +28,26 @@ bot.command('listExpenses', (ctx) => {
     }
   });
 })
+
+bot.command('add', (ctx) => {
+  console.log(ctx.from)
+  ctx.reply('adding...')
+  let expense = new Expense({
+    chatId: ctx.from.id,
+    date: new Date(),
+    amount: 50,
+    category: 'travel'
+  })
+
+  expense.save((err) => {
+    if(err) {
+      ctx.reply("I couldn't save your expense")
+    } else {
+      ctx.reply("Your new expense has been saved!")
+    }
+  })
+})
+
 bot.startPolling()
 // bot.onText(/\/listExpenses/, (msg) => {
 //   //bot.sendMessage(msg.chat.id, `jdfkafdfjkdsalfksladf;`);
